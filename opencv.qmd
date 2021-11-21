@@ -3,7 +3,11 @@ title: "Exploring opencv with otters"
 format: html
 ---
 
+
+## Basic Operations
+
 Starting with : https://docs.opencv.org/4.x/d3/df2/tutorial_py_basic_ops.html
+
 
 ```{python}
 import numpy as np
@@ -61,5 +65,43 @@ plt.subplot(131); plt.imshow(b, "Blues"); plt.title("blue")
 plt.subplot(132); plt.imshow(g, "Greens"); plt.title("green")
 plt.subplot(133); plt.imshow(r, "Reds"); plt.title("red")
 
+plt.show()
+```
+
+
+## Image Arithmetic
+
+```{python}
+import numpy as np
+import cv2 as cv
+from matplotlib import pyplot as plt
+
+otter1 = cv.imread("otter.png")
+otter2 = cv.resize(src = cv.imread("otter2.jpg"), dsize = (1024,682))
+
+print(otter1.shape)
+print(otter2.shape)
+plt.subplot(121); plt.imshow(otter1);
+plt.subplot(122); plt.imshow(otter2);
+plt.show()
+```
+
+```{python}
+# Create a circle 
+blank = np.zeros(otter1.shape[:2], dtype = "uint8")
+plt.subplot(121); plt.imshow(blank);
+blank2 = cv.circle(img = blank, center = (412,341), radius = 330, color = 255, thickness = -1)
+plt.subplot(122); plt.imshow(blank2);
+plt.show()
+```
+
+Note that (255-imcirc) here ensures that the dtype stays as an unsigned intager. 
+```{python}
+otter1_mask = cv.bitwise_and(otter1, otter1, mask = imcirc)
+otter2_mask = cv.bitwise_and(otter2, otter2, mask = (255-imcirc))
+otter3 = cv.add(otter1_mask, otter2_mask)
+plt.subplot(131); plt.imshow(otter1_mask);
+plt.subplot(132); plt.imshow(otter2_mask);
+plt.subplot(133); plt.imshow(otter3);
 plt.show()
 ```
